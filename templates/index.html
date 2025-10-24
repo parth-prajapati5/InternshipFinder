@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Career Page Scraper</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        :root {
+            --primary: #4f8cff;
+            --primary-dark: #2c5ec7;
+            --bg: #f4f8fb;
+            --card-bg: #fff;
+            --border: #e0e6ed;
+            --shadow: 0 4px 24px rgba(79, 140, 255, 0.08);
+            --radius: 14px;
+            --transition: 0.2s cubic-bezier(.4,0,.2,1);
+        }
+        body {
+            background: var(--bg);
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 36px 32px 32px 32px;
+        }
+        h1 {
+            color: var(--primary-dark);
+            margin-bottom: 8px;
+            font-size: 2.2em;
+            letter-spacing: -1px;
+        }
+        p {
+            color: #555;
+            margin-top: 0;
+        }
+        textarea {
+            width: 100%;
+            min-height: 90px;
+            font-size: 1.1em;
+            padding: 12px;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 18px;
+            resize: vertical;
+            transition: border var(--transition);
+        }
+        textarea:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+        button {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 12px 32px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(79, 140, 255, 0.08);
+            transition: background var(--transition), transform var(--transition);
+        }
+        button:active {
+            background: var(--primary-dark);
+            transform: scale(0.98);
+        }
+        .results {
+            margin-top: 36px;
+        }
+        .company-card {
+            background: var(--card-bg);
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 28px;
+            padding: 24px 22px 18px 22px;
+            transition: box-shadow var(--transition), border var(--transition);
+            animation: fadeIn 0.7s;
+        }
+        .company-card:hover {
+            box-shadow: 0 8px 32px rgba(79, 140, 255, 0.13);
+            border-color: var(--primary);
+        }
+        .company-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: 8px;
+        }
+        .info-row {
+            margin-bottom: 7px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .label {
+            font-weight: 500;
+            color: #333;
+            min-width: 160px;
+        }
+        .value {
+            color: #444;
+            flex: 1;
+        }
+        .value a {
+            color: var(--primary-dark);
+            text-decoration: none;
+            word-break: break-all;
+        }
+        .value a:hover {
+            text-decoration: underline;
+        }
+        .chip {
+            display: inline-block;
+            background: var(--primary);
+            color: #fff;
+            border-radius: 16px;
+            padding: 3px 12px;
+            font-size: 0.98em;
+            margin: 2px 6px 2px 0;
+        }
+        .loading {
+            color: var(--primary-dark);
+            font-size: 1.2em;
+            margin-top: 24px;
+            text-align: center;
+            animation: pulse 1.2s infinite;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+        @keyframes pulse {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+        @media (max-width: 600px) {
+            .container { padding: 16px 4vw; }
+            .company-card { padding: 14px 6px 10px 10px; }
+            .label { min-width: 110px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Career Page Scraper</h1>
+    <p>Enter company names (one per line):</p>
+    <textarea id="companies">google
+microsoft
+openai
+airbnb
+stripe</textarea>
+    <br>
+    <button onclick="scrape()" id="scrapeBtn">Check Career Pages</button>
+    <div class="results" id="results"></div>
+</div>
+<script>
+function escapeHTML(str) {
+    return str.replace(/[&<>"']/g, function(m) {
+        return ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;'
+        })[m];
+    });
+}
+
+function renderChips(arr) {
+    if (!arr || !arr.length) return 'N/A';
+    return arr.map(s => `<span class="chip">${escapeHTML(s)}</span>`).join('');
+}
+
+function scrape() {
+    const companies = document.getElementById('companies').value.split('\n').map(s => s.trim()).filter(Boolean);
+    if (companies.length === 0) {
+        alert('Please enter at least one company name.');
+        return;
+    }
+    document.getElementById('scrapeBtn').disabled = true;
+    document.getElementById('results').innerHTML = '<div class="loading">Checking career pages...</div>';
+    fetch('/scrape', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({companies: companies})
+    })
+    .then(response => response.json())
+    .then(data => {
+        let html = '';
+        data.forEach(info => {
+            html += `<div class="company-card">`;
+            html += `<div class="company-title">${escapeHTML(info.company)}</div>`;
+            html += `<div class="info-row"><span class="label">Career Page:</span> <span class="value"><a href="${escapeHTML(info.career_page_url)}" target="_blank">${escapeHTML(info.career_page_url)}</a></span></div>`;
+            html += `<div class="info-row"><span class="label">Internship Available:</span> <span class="value">${info.internship_available ? '<span class="chip" style="background:#2ecc40;">Yes</span>' : '<span class="chip" style="background:#ff7675;">No</span>'}</span></div>`;
+            html += `<div class="info-row"><span class="label">Required Skills:</span> <span class="value">${renderChips(info.required_skills)}</span></div>`;
+            html += `<div class="info-row"><span class="label">Emails Found:</span> <span class="value">${renderChips(info.emails_found)}</span></div>`;
+            html += `<div class="info-row"><span class="label">LinkedIn HR Search:</span> <span class="value"><a href="${escapeHTML(info.linkedin_hr_query)}" target="_blank">View HR Profiles</a></span></div>`;
+            html += `</div>`;
+        });
+        document.getElementById('results').innerHTML = html;
+        document.getElementById('scrapeBtn').disabled = false;
+    })
+    .catch(err => {
+        document.getElementById('results').innerHTML = '<div style="color:red;">Error occurred. Please try again.</div>';
+        document.getElementById('scrapeBtn').disabled = false;
+    });
+}
+</script>
+</body>
+</html>
