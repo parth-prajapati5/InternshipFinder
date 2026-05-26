@@ -20,15 +20,13 @@ InternshipFinder is a powerful platform designed for students and freshers to fi
 - Tailwind CSS
 - JavaScript
 
-
 ### Backend
 - Node.js
 - Express.js
 - MongoDB
 - Mongoose
-- JWT Authentication
 
-## Installation
+## 📦 Installation
 
 Clone the repository:
 
