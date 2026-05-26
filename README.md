@@ -13,13 +13,13 @@ InternshipFinder is a powerful platform designed for students and freshers to fi
 - 🔐 Secure authentication system
 - 📄 Easy application tracking
 
-## Tech Stack
+## 🛠 Tech Stack
 
 ### Frontend
 - React.js
 - Tailwind CSS
-- Axios
-- React Router DOM
+- JavaScript
+
 
 ### Backend
 - Node.js
