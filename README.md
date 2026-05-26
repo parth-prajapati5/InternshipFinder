@@ -2,22 +2,24 @@
 
 InternshipHrFinder is a full-stack web platform designed to help students, freshers, and job seekers discover internships, connect with HR professionals, and explore career opportunities efficiently.
 
-## ✨ Key Features
+## 🚀 Features
 
 - 🔍 Search internships and jobs
-- 🏢 Company and HR profiles
-- 👨‍💻 Student-friendly dashboard
+- 👨‍💼 HR and recruiter listings
+- 🧑‍🎓 Student-friendly interface
+- 🔐 Secure authentication system
 - 📱 Fully responsive design
 - ⚡ Fast and modern UI
-- 🔐 Secure authentication system
-- 📄 Easy application tracking
+- 📂 Easy application management
+- 🌐 Real-time data handling
 
-## 🛠 Tech Stack
+## 🛠️ Built With
 
 ### Frontend
 - React.js
 - Tailwind CSS
 - JavaScript
+- React Router DOM
 
 ### Backend
 - Node.js
@@ -25,9 +27,9 @@ InternshipHrFinder is a full-stack web platform designed to help students, fresh
 - MongoDB
 - Mongoose
 
-## 📦 Installation
+## 📦 Getting Started
 
 Clone the repository:
 
 ```bash
-git clone https://github.com/your-username/InternshipFinder.git
+git clone https://github.com/your-username/InternshipHrFinder.git
