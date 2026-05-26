@@ -1,7 +1,6 @@
-# InternshipFinder 🚀
+# InternshipHrFinder 💼
 
-InternshipFinder is a powerful platform designed for students and freshers to find internships, remote jobs, and connect with HR recruiters easily.
-
+InternshipHrFinder is a full-stack web platform designed to help students, freshers, and job seekers discover internships, connect with HR professionals, and explore career opportunities efficiently.
 
 ## ✨ Key Features
 
