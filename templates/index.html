@@ -2,217 +2,1384 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Career Page Scraper</title>
+    <title>InternScan // Career Page & HR contact finder</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
     <style>
+        /* Styling defaults & variables */
         :root {
-            --primary: #4f8cff;
-            --primary-dark: #2c5ec7;
-            --bg: #f4f8fb;
-            --card-bg: #fff;
-            --border: #e0e6ed;
-            --shadow: 0 4px 24px rgba(79, 140, 255, 0.08);
-            --radius: 14px;
-            --transition: 0.2s cubic-bezier(.4,0,.2,1);
+            --bg-primary: #07090e;
+            --bg-secondary: #0d111d;
+            --card-bg: rgba(22, 28, 45, 0.4);
+            --card-border: rgba(255, 255, 255, 0.07);
+            --card-border-hover: rgba(99, 102, 241, 0.4);
+            
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --primary-glow: rgba(99, 102, 241, 0.2);
+            
+            --success: #10b981;
+            --success-bg: rgba(16, 185, 129, 0.1);
+            --success-border: rgba(16, 185, 129, 0.25);
+            --success-glow: rgba(16, 185, 129, 0.2);
+            
+            --danger: #ef4444;
+            --danger-bg: rgba(239, 68, 68, 0.1);
+            --danger-border: rgba(239, 68, 68, 0.25);
+            
+            --info: #0ea5e9;
+            --info-bg: rgba(14, 165, 233, 0.1);
+            --info-border: rgba(14, 165, 233, 0.25);
+            
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+            
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            --shadow: 0 12px 40px -12px rgba(0, 0, 0, 0.5);
+            --gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
         }
-        body {
-            background: var(--bg);
-            font-family: 'Segoe UI', Arial, sans-serif;
+
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
+
+        body {
+            background-color: var(--bg-primary);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.12) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(168, 85, 247, 0.08) 0px, transparent 50%);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            min-height: 100vh;
+            line-height: 1.5;
+            padding-bottom: 60px;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Container & Header */
         .container {
-            max-width: 900px;
-            margin: 40px auto;
-            background: var(--card-bg);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            padding: 36px 32px 32px 32px;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 40px 24px;
         }
-        h1 {
-            color: var(--primary-dark);
-            margin-bottom: 8px;
-            font-size: 2.2em;
-            letter-spacing: -1px;
+
+        .dashboard-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 24px;
         }
-        p {
-            color: #555;
-            margin-top: 0;
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 16px;
         }
-        textarea {
-            width: 100%;
-            min-height: 90px;
-            font-size: 1.1em;
-            padding: 12px;
-            border: 1.5px solid var(--border);
-            border-radius: 8px;
-            margin-bottom: 18px;
-            resize: vertical;
-            transition: border var(--transition);
-        }
-        textarea:focus {
-            border-color: var(--primary);
-            outline: none;
-        }
-        button {
-            background: var(--primary);
+
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 20px var(--primary-glow);
             color: #fff;
-            border: none;
-            padding: 12px 32px;
-            border-radius: 8px;
-            font-size: 1.1em;
-            font-weight: 600;
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(79, 140, 255, 0.08);
-            transition: background var(--transition), transform var(--transition);
         }
-        button:active {
-            background: var(--primary-dark);
-            transform: scale(0.98);
+
+        .logo-icon i {
+            width: 24px;
+            height: 24px;
         }
-        .results {
-            margin-top: 36px;
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #fff, #cbd5e1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
         }
-        .company-card {
+
+        .subtitle {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* Layout Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 32px;
+            align-items: start;
+        }
+
+        /* Cards Style (Glassmorphism) */
+        .glass-card {
             background: var(--card-bg);
-            border: 1.5px solid var(--border);
-            border-radius: var(--radius);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-lg);
+            padding: 28px;
             box-shadow: var(--shadow);
-            margin-bottom: 28px;
-            padding: 24px 22px 18px 22px;
-            transition: box-shadow var(--transition), border var(--transition);
-            animation: fadeIn 0.7s;
+            transition: var(--transition);
         }
-        .company-card:hover {
-            box-shadow: 0 8px 32px rgba(79, 140, 255, 0.13);
-            border-color: var(--primary);
+
+        .glass-card:hover {
+            border-color: rgba(255, 255, 255, 0.12);
         }
-        .company-title {
-            font-size: 1.3em;
+
+        h2 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h2 i {
+            color: var(--primary);
+            width: 20px;
+            height: 20px;
+        }
+
+        .card-desc {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+        }
+
+        /* Custom Tag Input */
+        .tag-input-label {
+            display: block;
+            font-size: 0.85rem;
             font-weight: 600;
-            color: var(--primary-dark);
+            color: var(--text-secondary);
             margin-bottom: 8px;
         }
-        .info-row {
-            margin-bottom: 7px;
+
+        .tag-input-wrapper {
+            background: rgba(9, 11, 17, 0.6);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-md);
+            padding: 10px 14px;
             display: flex;
             flex-wrap: wrap;
+            gap: 8px;
             align-items: center;
+            transition: var(--transition);
+            min-height: 56px;
+            cursor: text;
         }
-        .label {
+
+        .tag-input-wrapper:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-glow);
+            background: rgba(9, 11, 17, 0.8);
+        }
+
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.25);
+            color: #a5b4fc;
+            padding: 5px 10px;
+            border-radius: var(--radius-sm);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
             font-weight: 500;
-            color: #333;
-            min-width: 160px;
+            gap: 6px;
+            animation: scaleIn 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-        .value {
-            color: #444;
+
+        .tag .remove-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 0 2px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .tag .remove-btn:hover {
+            color: var(--danger);
+        }
+
+        .tag .remove-btn i {
+            width: 14px;
+            height: 14px;
+        }
+
+        #tagInput {
             flex: 1;
+            min-width: 120px;
+            background: none;
+            border: none;
+            outline: none;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 0.9rem;
         }
-        .value a {
-            color: var(--primary-dark);
+
+        #tagInput::placeholder {
+            color: var(--text-muted);
+        }
+
+        /* Suggestion Pills */
+        .suggestions-container {
+            margin-top: 18px;
+            margin-bottom: 28px;
+        }
+
+        .suggestion-label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .suggestion-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .suggestion-pill {
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--card-border);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            transition: var(--transition);
+        }
+
+        .suggestion-pill:hover {
+            background: rgba(99, 102, 241, 0.12);
+            border-color: rgba(99, 102, 241, 0.4);
+            color: var(--text-primary);
+            transform: translateY(-1.5px);
+        }
+
+        /* Buttons */
+        .btn-primary {
+            width: 100%;
+            background: var(--gradient);
+            color: #fff;
+            border: none;
+            padding: 14px 24px;
+            border-radius: var(--radius-md);
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 15px var(--primary-glow);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Results / Statistics Panel */
+        .results-area {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Stats Row */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-md);
+            padding: 16px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-val {
+            font-size: 1.75rem;
+            font-weight: 800;
+        }
+
+        .text-success { color: var(--success); }
+        .text-info { color: var(--info); }
+
+        /* Filter Controls */
+        .filters-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+            background: rgba(22, 28, 45, 0.2);
+            border: 1px solid var(--card-border);
+            padding: 14px 20px;
+            border-radius: var(--radius-md);
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        .search-box input {
+            width: 100%;
+            background: rgba(9, 11, 17, 0.5);
+            border: 1px solid var(--card-border);
+            padding: 10px 14px 10px 42px;
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-family: inherit;
+            outline: none;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .search-box input:focus {
+            border-color: var(--primary);
+            background: rgba(9, 11, 17, 0.7);
+        }
+
+        .filter-options {
+            display: flex;
+            gap: 8px;
+        }
+
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--card-border);
+            color: var(--text-secondary);
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .filter-btn:hover {
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text-primary);
+        }
+
+        .filter-btn.active {
+            background: rgba(99, 102, 241, 0.15);
+            border-color: var(--primary);
+            color: #a5b4fc;
+        }
+
+        /* Results List */
+        .results-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Placeholder State */
+        .placeholder-state {
+            text-align: center;
+            padding: 60px 40px;
+            background: var(--card-bg);
+            border: 1px dashed rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-lg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .placeholder-icon {
+            width: 48px;
+            height: 48px;
+            color: var(--text-muted);
+            animation: spinSlow 12s linear infinite;
+        }
+
+        .placeholder-state h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+        }
+
+        .placeholder-state p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            max-width: 400px;
+        }
+
+        /* Company Card */
+        .company-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: slideInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .company-card:hover {
+            border-color: var(--card-border-hover);
+            box-shadow: 0 10px 30px -10px var(--primary-glow);
+            transform: translateY(-2px);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .company-info-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .company-logo {
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #fff;
+            text-transform: uppercase;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+        }
+
+        .company-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-transform: capitalize;
+        }
+
+        .career-link {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
             text-decoration: none;
-            word-break: break-all;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: var(--transition);
         }
-        .value a:hover {
+
+        .career-link:hover {
+            color: var(--primary);
             text-decoration: underline;
         }
-        .chip {
+
+        .career-link i {
+            width: 12px;
+            height: 12px;
+        }
+
+        /* Status Badge */
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-badge i {
+            width: 14px;
+            height: 14px;
+        }
+
+        .status-badge.available {
+            background: var(--success-bg);
+            border: 1px solid var(--success-border);
+            color: #34d399;
+            box-shadow: 0 0 10px var(--success-glow);
+        }
+
+        .status-badge.unavailable {
+            background: var(--danger-bg);
+            border: 1px solid var(--danger-border);
+            color: #f87171;
+        }
+
+        /* Card Body & Sub-sections */
+        .card-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 18px;
+        }
+
+        @media (max-width: 768px) {
+            .card-body {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .meta-section {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .section-title i {
+            width: 14px;
+            height: 14px;
+        }
+
+        .chips-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .chip-skill {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: var(--text-secondary);
+            padding: 4px 10px;
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .chip-email {
+            background: var(--info-bg);
+            border: 1px solid var(--info-border);
+            color: #7dd3fc;
+            padding: 4px 8px 4px 10px;
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            font-family: 'JetBrains Mono', monospace;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-copy-chip {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .btn-copy-chip:hover {
+            color: var(--text-primary);
+        }
+
+        .btn-copy-chip i {
+            width: 12px;
+            height: 12px;
+        }
+
+        .no-data-text {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        /* Card Footer */
+        .card-footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 16px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .btn-linkedin {
+            background: rgba(14, 165, 233, 0.1);
+            border: 1px solid rgba(14, 165, 233, 0.2);
+            color: #38bdf8;
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .btn-linkedin:hover {
+            background: rgba(14, 165, 233, 0.18);
+            border-color: rgba(14, 165, 233, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .btn-linkedin i {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Skeleton Loading UI */
+        .skeleton-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skeleton-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .skeleton-circle {
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-sm);
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .skeleton-title-box {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex: 1;
+            margin-left: 14px;
+        }
+
+        .skeleton-line {
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skeleton-line.title {
+            width: 120px;
+            height: 18px;
+        }
+
+        .skeleton-line.subtitle {
+            width: 200px;
+            height: 12px;
+        }
+
+        .skeleton-line.badge {
+            width: 100px;
+            height: 28px;
+            border-radius: 20px;
+        }
+
+        .skeleton-line.body-header {
+            width: 80px;
+            height: 12px;
+            margin-bottom: 8px;
+        }
+
+        .skeleton-line.chip-placeholder {
+            width: 70px;
+            height: 22px;
+            border-radius: var(--radius-sm);
             display: inline-block;
-            background: var(--primary);
-            color: #fff;
-            border-radius: 16px;
-            padding: 3px 12px;
-            font-size: 0.98em;
-            margin: 2px 6px 2px 0;
+            margin-right: 6px;
         }
-        .loading {
-            color: var(--primary-dark);
-            font-size: 1.2em;
-            margin-top: 24px;
-            text-align: center;
-            animation: pulse 1.2s infinite;
+
+        .skeleton-line::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -150px;
+            height: 100%;
+            width: 150px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+            animation: loadingShine 1.5s infinite;
         }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            background: rgba(13, 17, 29, 0.9);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(12px);
+            padding: 12px 20px;
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            animation: toastIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            min-width: 220px;
+        }
+
+        .toast.success {
+            border-left: 3px solid var(--success);
+        }
+
+        .toast.success i {
+            color: var(--success);
+        }
+
+        .toast.error {
+            border-left: 3px solid var(--danger);
+        }
+
+        .toast.error i {
+            color: var(--danger);
+        }
+
+        /* Keyframes */
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(30px);}
-            to { opacity: 1; transform: translateY(0);}
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
-        @keyframes pulse {
-            0% { opacity: 0.5; }
-            50% { opacity: 1; }
-            100% { opacity: 0.5; }
+
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        @media (max-width: 600px) {
-            .container { padding: 16px 4vw; }
-            .company-card { padding: 14px 6px 10px 10px; }
-            .label { min-width: 110px; }
+
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes spinSlow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes loadingShine {
+            0% { left: -150px; }
+            100% { left: 100%; }
+        }
+
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateY(30px) scale(0.9); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        @keyframes toastOut {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-20px); }
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 900px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            .container {
+                padding: 20px 16px;
+            }
         }
     </style>
 </head>
 <body>
+
 <div class="container">
-    <h1>Career Page Scraper</h1>
-    <p>Enter company names (one per line):</p>
-    <textarea id="companies">google
-microsoft
-openai
-airbnb
-stripe</textarea>
-    <br>
-    <button onclick="scrape()" id="scrapeBtn">Check Career Pages</button>
-    <div class="results" id="results"></div>
+    <!-- Header -->
+    <header class="dashboard-header">
+        <div class="logo-container">
+            <div class="logo-icon">
+                <i data-lucide="briefcase"></i>
+            </div>
+            <div>
+                <h1>InternScan</h1>
+                <p class="subtitle">Scrape career openings and identify hiring contacts</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Grid -->
+    <div class="dashboard-grid">
+        <!-- Control Panel -->
+        <aside class="control-panel">
+            <div class="glass-card">
+                <h2><i data-lucide="building"></i> Target Companies</h2>
+                <p class="card-desc">Add one or more companies below to check their career portals.</p>
+                
+                <div style="margin-bottom: 20px;">
+                    <span class="tag-input-label">Company List</span>
+                    <div class="tag-input-wrapper" id="tagInputWrapper" onclick="focusTagInput()">
+                        <div class="tags-container" id="tagsContainer">
+                            <!-- Tags injected by Javascript -->
+                        </div>
+                        <input type="text" id="tagInput" placeholder="Add company...">
+                    </div>
+                </div>
+
+                <!-- Suggestions -->
+                <div class="suggestions-container">
+                    <span class="suggestion-label">Suggestions</span>
+                    <div class="suggestion-pills">
+                        <span class="suggestion-pill" onclick="addCompanyTag('google')">google</span>
+                        <span class="suggestion-pill" onclick="addCompanyTag('microsoft')">microsoft</span>
+                        <span class="suggestion-pill" onclick="addCompanyTag('openai')">openai</span>
+                        <span class="suggestion-pill" onclick="addCompanyTag('airbnb')">airbnb</span>
+                        <span class="suggestion-pill" onclick="addCompanyTag('stripe')">stripe</span>
+                        <span class="suggestion-pill" onclick="addCompanyTag('meta')">meta</span>
+                        <span class="suggestion-pill" onclick="addCompanyTag('netflix')">netflix</span>
+                        <span class="suggestion-pill" onclick="addCompanyTag('uber')">uber</span>
+                    </div>
+                </div>
+
+                <button class="btn-primary" onclick="scrape()" id="scrapeBtn">
+                    <i data-lucide="scan"></i> Check Career Pages
+                </button>
+            </div>
+        </aside>
+
+        <!-- Results Pane -->
+        <main class="results-area">
+            <!-- Stats -->
+            <div class="stats-row" id="statsRow" style="display: none;">
+                <div class="stat-card">
+                    <span class="stat-label">Scanned</span>
+                    <span class="stat-val" id="statScanned">0</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label text-success">Internships Found</span>
+                    <span class="stat-val text-success" id="statInternships">0</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label text-info">Contact Emails</span>
+                    <span class="stat-val text-info" id="statEmails">0</span>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="filters-row" id="filtersRow" style="display: none;">
+                <div class="search-box">
+                    <i data-lucide="search"></i>
+                    <input type="text" id="searchInput" placeholder="Search by company or skill..." oninput="applyFilters()">
+                </div>
+                <div class="filter-options">
+                    <button class="filter-btn active" id="filter-all" onclick="setFilter('all')">All</button>
+                    <button class="filter-btn" id="filter-internship" onclick="setFilter('internship')">Internship Available</button>
+                    <button class="filter-btn" id="filter-emails" onclick="setFilter('emails')">With Emails</button>
+                </div>
+            </div>
+
+            <!-- Results Listing -->
+            <div id="results" class="results-list">
+                <div class="placeholder-state" id="placeholderState">
+                    <i data-lucide="compass" class="placeholder-icon"></i>
+                    <h3>Scan Ready</h3>
+                    <p>Populate your target companies on the left, then trigger the scan to inspect their portals, check roles, and list HR details.</p>
+                </div>
+            </div>
+        </main>
+    </div>
 </div>
+
+<!-- Toast Box -->
+<div class="toast-container" id="toastContainer"></div>
+
 <script>
-function escapeHTML(str) {
-    return str.replace(/[&<>"']/g, function(m) {
-        return ({
+    // State management
+    let activeCompanies = ['google', 'microsoft', 'openai', 'airbnb', 'stripe'];
+    let scrapedData = [];
+    let currentFilter = 'all';
+
+    // Gradients for company placeholders
+    const gradients = [
+        'linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%)',
+        'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+        'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+        'linear-gradient(135deg, #ec4899 0%, #db2777 100%)',
+        'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)',
+        'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)'
+    ];
+
+    // Initialize Page
+    document.addEventListener('DOMContentLoaded', () => {
+        renderTags();
+        lucide.createIcons();
+
+        // Bind Enter and comma key in tag input
+        const tagInput = document.getElementById('tagInput');
+        tagInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ',') {
+                e.preventDefault();
+                const val = tagInput.value.trim().toLowerCase();
+                if (val) {
+                    addCompanyTag(val);
+                    tagInput.value = '';
+                }
+            }
+        });
+    });
+
+    // Tag list operations
+    function renderTags() {
+        const container = document.getElementById('tagsContainer');
+        container.innerHTML = '';
+        activeCompanies.forEach((company, index) => {
+            container.innerHTML += `
+                <div class="tag">
+                    <span>${escapeHTML(company)}</span>
+                    <button class="remove-btn" onclick="removeCompanyTag(${index}, event)">
+                        <i data-lucide="x"></i>
+                    </button>
+                </div>
+            `;
+        });
+        lucide.createIcons();
+    }
+
+    function addCompanyTag(companyName) {
+        companyName = companyName.trim().toLowerCase();
+        if (!companyName) return;
+        if (activeCompanies.includes(companyName)) {
+            showToast('Company already added!', 'error');
+            return;
+        }
+        activeCompanies.push(companyName);
+        renderTags();
+    }
+
+    function removeCompanyTag(index, event) {
+        event.stopPropagation();
+        activeCompanies.splice(index, 1);
+        renderTags();
+    }
+
+    function focusTagInput() {
+        document.getElementById('tagInput').focus();
+    }
+
+    // Toast Alert
+    function showToast(message, type = 'success') {
+        const container = document.getElementById('toastContainer');
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        
+        const iconName = type === 'success' ? 'check-circle' : 'alert-circle';
+        toast.innerHTML = `
+            <i data-lucide="${iconName}"></i>
+            <span>${escapeHTML(message)}</span>
+        `;
+        
+        container.appendChild(toast);
+        lucide.createIcons();
+
+        // Trigger fade out after 3 seconds
+        setTimeout(() => {
+            toast.style.animation = 'toastOut 0.3s ease-in forwards';
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
+
+    // HTML Escape helper
+    function escapeHTML(str) {
+        if (!str) return '';
+        return str.replace(/[&<>"']/g, m => ({
             '&': '&amp;',
             '<': '&lt;',
             '>': '&gt;',
             '"': '&quot;',
             "'": '&#39;'
-        })[m];
-    });
-}
-
-function renderChips(arr) {
-    if (!arr || !arr.length) return 'N/A';
-    return arr.map(s => `<span class="chip">${escapeHTML(s)}</span>`).join('');
-}
-
-function scrape() {
-    const companies = document.getElementById('companies').value.split('\n').map(s => s.trim()).filter(Boolean);
-    if (companies.length === 0) {
-        alert('Please enter at least one company name.');
-        return;
+        })[m]);
     }
-    document.getElementById('scrapeBtn').disabled = true;
-    document.getElementById('results').innerHTML = '<div class="loading">Checking career pages...</div>';
-    fetch('/scrape', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({companies: companies})
-    })
-    .then(response => response.json())
-    .then(data => {
-        let html = '';
-        data.forEach(info => {
-            html += `<div class="company-card">`;
-            html += `<div class="company-title">${escapeHTML(info.company)}</div>`;
-            html += `<div class="info-row"><span class="label">Career Page:</span> <span class="value"><a href="${escapeHTML(info.career_page_url)}" target="_blank">${escapeHTML(info.career_page_url)}</a></span></div>`;
-            html += `<div class="info-row"><span class="label">Internship Available:</span> <span class="value">${info.internship_available ? '<span class="chip" style="background:#2ecc40;">Yes</span>' : '<span class="chip" style="background:#ff7675;">No</span>'}</span></div>`;
-            html += `<div class="info-row"><span class="label">Required Skills:</span> <span class="value">${renderChips(info.required_skills)}</span></div>`;
-            html += `<div class="info-row"><span class="label">Emails Found:</span> <span class="value">${renderChips(info.emails_found)}</span></div>`;
-            html += `<div class="info-row"><span class="label">LinkedIn HR Search:</span> <span class="value"><a href="${escapeHTML(info.linkedin_hr_query)}" target="_blank">View HR Profiles</a></span></div>`;
-            html += `</div>`;
+
+    // Copy to clipboard helper
+    function copyToClipboard(text, event) {
+        if (event) event.stopPropagation();
+        navigator.clipboard.writeText(text).then(() => {
+            showToast(`Copied: ${text}`, 'success');
+        }).catch(err => {
+            showToast('Failed to copy text', 'error');
         });
-        document.getElementById('results').innerHTML = html;
-        document.getElementById('scrapeBtn').disabled = false;
-    })
-    .catch(err => {
-        document.getElementById('results').innerHTML = '<div style="color:red;">Error occurred. Please try again.</div>';
-        document.getElementById('scrapeBtn').disabled = false;
-    });
-}
+    }
+
+    // Render loading skeletons
+    function renderSkeletons() {
+        const resultsDiv = document.getElementById('results');
+        let skeletonHtml = '';
+        const count = Math.max(activeCompanies.length, 2);
+        
+        for (let i = 0; i < count; i++) {
+            skeletonHtml += `
+                <div class="skeleton-card">
+                    <div class="skeleton-header">
+                        <div style="display:flex; align-items:center; flex:1;">
+                            <div class="skeleton-circle"></div>
+                            <div class="skeleton-title-box">
+                                <div class="skeleton-line title"></div>
+                                <div class="skeleton-line subtitle"></div>
+                            </div>
+                        </div>
+                        <div class="skeleton-line badge"></div>
+                    </div>
+                    <div class="card-body">
+                        <div class="meta-section">
+                            <div class="skeleton-line body-header"></div>
+                            <div>
+                                <div class="skeleton-line chip-placeholder"></div>
+                                <div class="skeleton-line chip-placeholder" style="width:50px;"></div>
+                            </div>
+                        </div>
+                        <div class="meta-section">
+                            <div class="skeleton-line body-header"></div>
+                            <div>
+                                <div class="skeleton-line chip-placeholder" style="width:110px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        resultsDiv.innerHTML = skeletonHtml;
+    }
+
+    // Get a deterministic gradient based on string name
+    function getGradientForString(str) {
+        let hash = 0;
+        for (let i = 0; i < str.length; i++) {
+            hash = str.charCodeAt(i) + ((hash << 5) - hash);
+        }
+        const index = Math.abs(hash) % gradients.length;
+        return gradients[index];
+    }
+
+    // Main scrape trigger
+    function scrape() {
+        if (activeCompanies.length === 0) {
+            showToast('Please add at least one company tag.', 'error');
+            return;
+        }
+
+        const scrapeBtn = document.getElementById('scrapeBtn');
+        const resultsDiv = document.getElementById('results');
+        const statsRow = document.getElementById('statsRow');
+        const filtersRow = document.getElementById('filtersRow');
+
+        scrapeBtn.disabled = true;
+        statsRow.style.display = 'none';
+        filtersRow.style.display = 'none';
+
+        renderSkeletons();
+
+        fetch('/scrape', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({companies: activeCompanies})
+        })
+        .then(response => {
+            if (!response.ok) throw new Error('Network error');
+            return response.json();
+        })
+        .then(data => {
+            scrapedData = data;
+            
+            // Show utility layouts
+            statsRow.style.display = 'grid';
+            filtersRow.style.display = 'flex';
+            
+            // Build stats
+            updateStatistics(data);
+            
+            // Render the items
+            renderResultsList(data);
+            
+            showToast('Scan completed successfully!', 'success');
+        })
+        .catch(err => {
+            resultsDiv.innerHTML = `
+                <div class="placeholder-state" style="border-color: var(--danger-border); background: var(--danger-bg);">
+                    <i data-lucide="alert-octagon" style="color: var(--danger); width:40px; height:40px;"></i>
+                    <h3 style="color: #f87171;">Scraping Error</h3>
+                    <p>An issue was encountered while scanning career portals. Please check your connection and try again.</p>
+                </div>
+            `;
+            showToast('Failed to scrape company portals.', 'error');
+            lucide.createIcons();
+        })
+        .finally(() => {
+            scrapeBtn.disabled = false;
+        });
+    }
+
+    // Compute and render stats counters
+    function updateStatistics(data) {
+        document.getElementById('statScanned').innerText = data.length;
+        
+        const openCount = data.filter(item => item.internship_available).length;
+        document.getElementById('statInternships').innerText = openCount;
+
+        const emailCount = data.reduce((acc, item) => acc + (item.emails_found ? item.emails_found.length : 0), 0);
+        document.getElementById('statEmails').innerText = emailCount;
+    }
+
+    // Apply client-side search & filtering
+    function applyFilters() {
+        const query = document.getElementById('searchInput').value.trim().toLowerCase();
+        
+        let filtered = scrapedData;
+
+        // Apply Tab Filters
+        if (currentFilter === 'internship') {
+            filtered = filtered.filter(item => item.internship_available);
+        } else if (currentFilter === 'emails') {
+            filtered = filtered.filter(item => item.emails_found && item.emails_found.length > 0);
+        }
+
+        // Apply Search query
+        if (query) {
+            filtered = filtered.filter(item => {
+                const nameMatch = item.company.toLowerCase().includes(query);
+                const skillsMatch = item.required_skills && item.required_skills.some(skill => skill.toLowerCase().includes(query));
+                return nameMatch || skillsMatch;
+            });
+        }
+
+        renderResultsList(filtered);
+    }
+
+    function setFilter(filterType) {
+        currentFilter = filterType;
+        
+        // Update active class on filter buttons
+        document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+        document.getElementById(`filter-${filterType}`).classList.add('active');
+        
+        applyFilters();
+    }
+
+    // Render results cards list
+    function renderResultsList(items) {
+        const container = document.getElementById('results');
+        
+        if (items.length === 0) {
+            container.innerHTML = `
+                <div class="placeholder-state">
+                    <i data-lucide="frown" class="placeholder-icon"></i>
+                    <h3>No Matches Found</h3>
+                    <p>Adjust your search query or filter settings to display results.</p>
+                </div>
+            `;
+            lucide.createIcons();
+            return;
+        }
+
+        let html = '';
+        items.forEach((item, index) => {
+            const logoLetter = item.company.charAt(0);
+            const logoBg = getGradientForString(item.company);
+            const statusClass = item.internship_available ? 'available' : 'unavailable';
+            const statusLabel = item.internship_available ? 'Internship Available' : 'No Internships Found';
+            const statusIcon = item.internship_available ? 'check-circle-2' : 'x-circle';
+
+            // Build skills
+            let skillsHtml = '<span class="no-data-text">None detected</span>';
+            if (item.required_skills && item.required_skills.length > 0) {
+                skillsHtml = item.required_skills.map(skill => `<span class="chip-skill">${escapeHTML(skill)}</span>`).join('');
+            }
+
+            // Build emails
+            let emailsHtml = '<span class="no-data-text">No emails listed</span>';
+            if (item.emails_found && item.emails_found.length > 0) {
+                emailsHtml = item.emails_found.map(email => `
+                    <span class="chip-email">
+                        <span>${escapeHTML(email)}</span>
+                        <button class="btn-copy-chip" onclick="copyToClipboard('${escapeHTML(email)}', event)" title="Copy Email">
+                            <i data-lucide="copy"></i>
+                        </button>
+                    </span>
+                `).join('');
+            }
+
+            // Stagger animations by calculating animation-delay
+            const delay = index * 0.08;
+
+            html += `
+                <div class="company-card" style="animation-delay: ${delay}s">
+                    <!-- Header -->
+                    <div class="card-header">
+                        <div class="company-info-header">
+                            <div class="company-logo" style="background: ${logoBg}">
+                                ${escapeHTML(logoLetter)}
+                            </div>
+                            <div>
+                                <h3 class="company-name">${escapeHTML(item.company)}</h3>
+                                <a class="career-link" href="${escapeHTML(item.career_page_url)}" target="_blank" onclick="event.stopPropagation()">
+                                    ${escapeHTML(item.career_page_url)} <i data-lucide="external-link"></i>
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <div class="status-badge ${statusClass}">
+                            <i data-lucide="${statusIcon}"></i>
+                            <span>${statusLabel}</span>
+                        </div>
+                    </div>
+
+                    <!-- Body -->
+                    <div class="card-body">
+                        <!-- Skills Column -->
+                        <div class="meta-section">
+                            <div class="section-title"><i data-lucide="terminal"></i> Required Skills</div>
+                            <div class="chips-container">
+                                ${skillsHtml}
+                            </div>
+                        </div>
+
+                        <!-- Emails Column -->
+                        <div class="meta-section">
+                            <div class="section-title"><i data-lucide="mail"></i> Extracted Emails</div>
+                            <div class="chips-container">
+                                ${emailsHtml}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer / LinkedIn -->
+                    <div class="card-footer">
+                        <a class="btn-linkedin" href="${escapeHTML(item.linkedin_hr_query)}" target="_blank" onclick="event.stopPropagation()">
+                            <i data-lucide="linkedin"></i> Search HR on LinkedIn
+                        </a>
+                    </div>
+                </div>
+            `;
+        });
+
+        container.innerHTML = html;
+        lucide.createIcons();
+    }
 </script>
 </body>
 </html>
